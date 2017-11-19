@@ -45,10 +45,10 @@ void HAL_SystemReset(void)
   */
 void HAL_NVIC_Enable(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t SubPriority)
 {
-  NVIC_SetPriorityGrouping(NVIC_PRIORITY_GROUP);  
-  NVIC_SetPriority((IRQn), NVIC_EncodePriority (NVIC_PRIORITY_GROUP, PreemptPriority, SubPriority));  
-  NVIC_EnableIRQ(IRQn); 
-  
+    NVIC_SetPriorityGrouping(NVIC_PRIORITY_GROUP);  
+    NVIC_SetPriority((IRQn), NVIC_EncodePriority (NVIC_PRIORITY_GROUP, PreemptPriority, SubPriority));  
+    NVIC_EnableIRQ(IRQn); 
+    
 }
 
 
@@ -59,6 +59,13 @@ void HAL_NVIC_Enable(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t SubPrior
   */
 void HAL_NVIC_DisableIRQ(IRQn_Type IRQn)
 { 
-  NVIC_DisableIRQ((IRQn));
-  
+    NVIC_DisableIRQ((IRQn));
+    
 }
+
+
+
+
+
+
+
