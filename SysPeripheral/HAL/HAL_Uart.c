@@ -204,12 +204,12 @@ static void HAL_UART_IOConfig(uint8_t uUartNode)
         HAL_GPIO_ModeConfig(0, 3, GPIO_PUSH_UP);    // RX: PA3
         
     case HAL_UART_NODE2:
-        HAL_GPIO_ModeConfig(1, 10, GPIO_AF_PP_H);   // TX: PA2
-        HAL_GPIO_ModeConfig(1, 11, GPIO_PUSH_UP);   // RX: PA3
+        HAL_GPIO_ModeConfig(1, 10, GPIO_AF_PP_H);   // TX: PB10
+        HAL_GPIO_ModeConfig(1, 11, GPIO_PUSH_UP);   // RX: PB11
         
     case HAL_UART_NODE3:
-        HAL_GPIO_ModeConfig(2, 10, GPIO_AF_PP_H);   // TX: PA2
-        HAL_GPIO_ModeConfig(2, 11, GPIO_PUSH_UP);   // RX: PA3
+        HAL_GPIO_ModeConfig(2, 10, GPIO_AF_PP_H);   // TX: PC10
+        HAL_GPIO_ModeConfig(2, 11, GPIO_PUSH_UP);   // RX: PC11
         
         break;
     default : break;
@@ -297,7 +297,7 @@ static void HAL_UART_ModeConfig(uint8_t uUartNode, uint32_t ulBaudRate)
     HAL_NVIC_Enable(USART_IRQn[uUartNode], 2, 2);    //开内核中断
     
     //配置波特率
-    USART[uUartNode]->BRR = USARTx_GET_BRR((USART[uUartNode] == USART1)? APB2_FCLK : APB1_FCLK, ulBaudRate);
+    USART[uUartNode]->BRR = USARTx_GET_BRR((uUartNode == HAL_UART_NODE0)? APB2_FCLK : APB1_FCLK, ulBaudRate);
     
     //开串口
     USART[uUartNode]->CR1 |=  USART_CR1_UE;
@@ -670,6 +670,8 @@ static UART_TX_NODE **List_GetHead(uint8_t uUartNode)
     {
     case HAL_UART_NODE0: pHeadNode = &g_HeadNodePtr0; break;
     case HAL_UART_NODE1: pHeadNode = &g_HeadNodePtr1; break;
+    case HAL_UART_NODE2: pHeadNode = &g_HeadNodePtr2; break;
+    case HAL_UART_NODE3: pHeadNode = &g_HeadNodePtr3; break;
     default: break;
     }
 
@@ -686,10 +688,8 @@ static UART_TX_NODE **List_GetHead(uint8_t uUartNode)
   */
 static void HAL_UART_DmaSend(uint8_t uUartNode, uint8_t *pSBuff, uint32_t ulSize)
 {
-#if 0
     //等待串口上轮发送完成
-    while (!(USART[uUartNode]->ISR & (1<<6)));
-#endif
+    while (!(USART[uUartNode]->SR & (1<<6)));
     
     //关闭通道
     USART_TxDmaChannel[uUartNode]->CCR &= ~(0X1<<0);
@@ -752,6 +752,12 @@ void HAL_UART_DmaSendBuff(uint8_t uUartNode, void *pSBuff, uint32_t ulSize)
     //将堆上的数据存储到节点空间中
     memcpy(pTxNode->uBuff, pSBuff, ulSize);
     pTxNode->ulLen = ulSize;
+    
+    //参数判断
+    if (pHeadNode == NULL)
+    {
+        return;
+    }
 
     //嵌入链表
     if (*pHeadNode != NULL)  //假如当前链表非空(发送中)

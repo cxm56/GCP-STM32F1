@@ -2,7 +2,7 @@
 
 <workspace>
   <project>
-    <path>$WS_DIR$\GeneralControlPlatform.ewp</path>
+    <path>$WS_DIR$\GCP.ewp</path>
   </project>
   <batchBuild/>
 </workspace>

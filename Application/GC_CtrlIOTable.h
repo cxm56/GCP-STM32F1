@@ -6,7 +6,6 @@
 typedef enum
 {
     GC_OUTPUT_IO_LED,
-    GC_OUTPUT_IO_BLE_EN,
     
 }GC_OUTPUT_IO_TABLE;
 
@@ -15,9 +14,6 @@ typedef enum
 typedef enum
 {
     GC_INPUT_IO_PWM0 = 0,
-    GC_INPUT_IO_PWM1,
-    GC_INPUT_IO_PWM2,
-    GC_INPUT_IO_PWM3,
 
 }GC_INPUT_IO_TABLE;
 

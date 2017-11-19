@@ -24,10 +24,7 @@
 //输入IO表
 static GPIO_DATA m_InputIOTable[] = 
 {
-    {0,   0},
-    {0,   1},
-    {0,   2},
-    {0,   3},
+    {2,   0},
 };
 
 
@@ -35,11 +32,8 @@ static GPIO_DATA m_InputIOTable[] =
 static GPIO_DATA m_OutputIOTable[] = 
 {
     //LED灯
-    {0,  4}, 
+    {1,  0}, 
     
-    //BLE使能脚
-    {0, 7},
-
 };
 
 

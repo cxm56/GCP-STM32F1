@@ -22,7 +22,9 @@
 #include "../SysPeripheral/GPIO/GPIO_Man.h"
 #include "../SysPeripheral/SysTick/SysTimer.h"
 #include "../SysPeripheral/IRQ/IRQ_Man.h"
+#include "../SysPeripheral/UART/UART.h"
 
+#define DEBUG_PRINTF(data, len)    // UART_SendBuff(0, (uBit8 *)(data), len)
 
 /*****************************************************************************
  * 私有成员定义及实现
@@ -39,15 +41,19 @@
 
 //脉冲滤波
 #define PWM_MIN_VALID_TIME      (15)//最小有效时间(单位:MS)
+#define PWM_STOP_TIME           (3000)
 
 static SYS_TIME_DATA m_PwmChTimer[PWM_CH_COUNT] = {0};  //计时器
 static SYS_TIME_DATA m_MotorRunTimer = {1};             //电机运行计时器
 SYS_TIME_DATA g_PwmCountValidTimer = {1};               //PWM计数有效定时器
 
+#define MIN_PWM_COUNT       (20)
+
 uBit32 g_ulCurDir = 0;              //当前方向
 uBit32 g_ulForwardPwmCount = 0;     //正转数
 uBit32 g_ulBackwardPwmCount = 0;    //反转数
 Bit32  g_lPwmCount = 0;             //电机计数
+
 
 const static uBit32 m_ulForwardOldCh[4]  = {3, 0, 1, 2};    //正转时序
 const static uBit32 m_ulBackwardOldCh[4] = {1, 2, 3, 0};    //反转时序
@@ -93,6 +99,8 @@ static void GC_CH0_ExtiHandler(void)
         //只有电平时间大于最小限制值的才认为是有效脉冲
         if (SysTime_GetReckonValue(&m_PwmChTimer[0]) >= PWM_MIN_VALID_TIME)
         {
+            DEBUG_PRINTF("1", 1);
+            
             g_ulCurDir = GC_GetCurMotorDir(0);
             
             if (g_ulCurDir == PWM_DIR_FORWARD)
@@ -104,7 +112,7 @@ static void GC_CH0_ExtiHandler(void)
                 g_ulBackwardPwmCount++;
             }
             
-            SysTime_Start(&m_MotorRunTimer, 1000);
+            SysTime_Start(&m_MotorRunTimer, PWM_STOP_TIME);
         }
     }
       
@@ -129,6 +137,8 @@ static void GC_CH1_ExtiHandler(void)
         //只有电平时间大于最小限制值的才认为是有效脉冲
         if (SysTime_GetReckonValue(&m_PwmChTimer[1]) >= PWM_MIN_VALID_TIME)
         {
+            DEBUG_PRINTF("2", 1);
+            
             g_ulCurDir = GC_GetCurMotorDir(1);
             
             if (g_ulCurDir == PWM_DIR_FORWARD)
@@ -140,7 +150,7 @@ static void GC_CH1_ExtiHandler(void)
                 g_ulBackwardPwmCount++;
             }
             
-            SysTime_Start(&m_MotorRunTimer, 1000);
+            SysTime_Start(&m_MotorRunTimer, PWM_STOP_TIME);
         }
     }
       
@@ -165,6 +175,8 @@ static void GC_CH2_ExtiHandler(void)
         //只有电平时间大于最小限制值的才认为是有效脉冲
         if (SysTime_GetReckonValue(&m_PwmChTimer[2]) >= PWM_MIN_VALID_TIME)
         {
+            DEBUG_PRINTF("3", 1);
+            
             g_ulCurDir = GC_GetCurMotorDir(2);
             
             if (g_ulCurDir == PWM_DIR_FORWARD)
@@ -176,7 +188,7 @@ static void GC_CH2_ExtiHandler(void)
                 g_ulBackwardPwmCount++;
             }
             
-            SysTime_Start(&m_MotorRunTimer, 1000);
+            SysTime_Start(&m_MotorRunTimer, PWM_STOP_TIME);
         }
     }
       
@@ -201,6 +213,8 @@ static void GC_CH3_ExtiHandler(void)
         //只有电平时间大于最小限制值的才认为是有效脉冲
         if (SysTime_GetReckonValue(&m_PwmChTimer[3]) >= PWM_MIN_VALID_TIME)
         {
+            DEBUG_PRINTF("4", 1);
+            
             g_ulCurDir = GC_GetCurMotorDir(3);
             
             if (g_ulCurDir == PWM_DIR_FORWARD)
@@ -212,7 +226,7 @@ static void GC_CH3_ExtiHandler(void)
                 g_ulBackwardPwmCount++;
             }
             
-            SysTime_Start(&m_MotorRunTimer, 1000);
+            SysTime_Start(&m_MotorRunTimer, PWM_STOP_TIME);
         }
     }
       
@@ -239,7 +253,8 @@ void GC_SignalDetect_Init(void)
 Bit32 GC_GetPwmCount(void)
 {
     
-    return (g_ulForwardPwmCount - g_ulBackwardPwmCount);
+    //return (g_ulForwardPwmCount - g_ulBackwardPwmCount);
+    return g_lPwmCount;
 }
 
 
@@ -281,9 +296,17 @@ void GC_SignalDetectHandler(void)
             GC_ResetPwmCount(); //清空PWM数
             SysTime_Start(&g_PwmCountValidTimer, 0);
         }
+        //电机停止
         else 
         {
-            SysTime_Start(&g_PwmCountValidTimer, 20000);
+            //只有任意一个方向的转动大于最小脉冲才认为是一个有效的动作
+            if ((g_ulForwardPwmCount >= MIN_PWM_COUNT) || (g_ulBackwardPwmCount >= MIN_PWM_COUNT))
+            {
+                g_lPwmCount = g_ulForwardPwmCount - g_ulBackwardPwmCount;
+                
+                SysTime_Start(&g_PwmCountValidTimer, 25000);
+            }
+            
         }
     }
     

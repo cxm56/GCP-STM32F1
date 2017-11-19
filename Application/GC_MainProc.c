@@ -19,7 +19,6 @@
 #include "GC_MainProc.h"
 #include "GC_HwCtrl.h"
 #include "GC_HardwareDef.h"
-#include "GC_SignalDetect.h"
 #include "GC_ComMan.h"
 
 #include "../DataType/DataType.h"
@@ -36,8 +35,6 @@ void GC_Init(void)
     //硬件初始化
     GC_HwInit();
     
-    //信号检测功能初始化
-    GC_SignalDetect_Init();
 }
 
 
@@ -50,9 +47,6 @@ void GC_MainProc(void)
 {
     //LED显示
     GC_MainWorkLedShow();
-    
-    //信号检测处理
-    GC_SignalDetectHandler();
     
     //通信处理
     GC_ComHandler();

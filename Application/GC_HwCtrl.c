@@ -18,7 +18,8 @@
 /***********************************<INCLUDES>**********************************/
 #include "GC_HwCtrl.h"
 #include "GC_CtrlIOTable.h"
-
+#include "GC_HardwareDef.h"
+      
 #include "../DataType/DataType.h"
 #include "../SysPeripheral/GPIO/GPIO_Man.h"
 #include "../SysPeripheral/KEY/KEY.h"
@@ -32,7 +33,7 @@
 /*****************************************************************************
  * 私有成员定义及实现
  ****************************************************************************/
-#define GC_LED_TOGGLE_TIME          (500)       //LED翻转时间(MS)
+#define GC_LED_TOGGLE_TIME          (100)       //LED翻转时间(MS)
 static SYS_TIME_DATA m_LedCtrlTimer  = {1};     //LED控定时器
 
 
@@ -67,18 +68,8 @@ void GC_HwInit(void)
     //初始化IO
     GC_IOConfig();
     
-    //初始化外部中断
-    EXTI_Init(GC_INPUT_IO_PWM0, EXTI_TRG_RISING | EXTI_TRG_FALLING);
-    EXTI_Init(GC_INPUT_IO_PWM1, EXTI_TRG_RISING | EXTI_TRG_FALLING);
-    EXTI_Init(GC_INPUT_IO_PWM2, EXTI_TRG_RISING | EXTI_TRG_FALLING);
-    EXTI_Init(GC_INPUT_IO_PWM3, EXTI_TRG_RISING | EXTI_TRG_FALLING);
-    
-    //使能BLE输出
-    GPIO_MAN_SetOutputPinLogicToggle(GC_OUTPUT_IO_BLE_EN, 1);
-    GPIO_MAN_SetOutputPinState(GC_OUTPUT_IO_BLE_EN, 1);
-    
-    //使能串口0
-    UART_Init(1, 115200);
+    //使能串口
+    UART_Init(GC_UART_NODE, 115200);
     
 }
 
@@ -99,8 +90,6 @@ void GC_MainWorkLedShow(void)
         SysTime_StartOneShot(&m_LedCtrlTimer, GC_LED_TOGGLE_TIME); //设置下一次执行的时间
         
         GPIO_ToggleOutputState(GC_OUTPUT_IO_LED);
-        
-        UART_BlockSendBuff(1, (uBit8 *)"123\r\n", 5);
     }
 
 }
