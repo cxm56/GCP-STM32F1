@@ -28,4 +28,10 @@
 *.tmp
 *.temp
 
-
+*.dep
+*.ewd
+*.ewp
+*.ewt
+*.eww
+*.rar
+*.zip
