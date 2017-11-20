@@ -24,6 +24,6 @@
 *.dbgdt
 *.wspos
 *.jlink
-
+*.bin
 
 
