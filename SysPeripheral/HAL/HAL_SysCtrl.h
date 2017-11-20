@@ -49,6 +49,10 @@
 extern "C" {
 #endif
 
+/*****************************************************************************
+ * 系统复位相关
+ ****************************************************************************/
+
 /**
   * @brief  系统复位函数
   * @param  None
@@ -57,14 +61,18 @@ extern "C" {
 void HAL_SystemReset(void);
 
 
+/*****************************************************************************
+ * 系统NVIC相关
+ ****************************************************************************/
+
 /**
   * @brief  NVIC使能
   * @param  IRQn 中断号
-  * @param  PreemptPriority  抢占优先级
-  * @param  SubPriority  响应优先级
+  * @param  ulPreemptPrio  抢占优先级
+  * @param  ulSubPrio  响应优先级
   * @retval None
   */
-void HAL_NVIC_Enable(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t SubPriority);
+void HAL_NVIC_Enable(IRQn_Type IRQn, uint32_t ulPreemptPrio, uint32_t ulSubPrio);
 
 
 /**
@@ -73,6 +81,18 @@ void HAL_NVIC_Enable(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t SubPrior
   * @retval None
   */
 void HAL_NVIC_DisableIRQ(IRQn_Type IRQn);
+
+
+/*****************************************************************************
+ * 系统唤醒休眠相关
+ ****************************************************************************/
+
+/**
+  * @brief  待机模式进入
+  * @param  None
+  * @retval None
+  */
+void HAL_EnterSrandby(void);
 
 
 #ifdef __cplusplus

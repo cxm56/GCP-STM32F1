@@ -26,9 +26,17 @@
 
 
 /*****************************************************************************
- * WatchDog 基本功能接口函数
+ * 私有成员定义及实现
  ****************************************************************************/
+//独立看门狗命令
+#define IWDG_ACCESS_REG_ENABLE      ( 0x5555 )      //看门狗写寄存器使能
+#define IWDG_START                  ( 0xCCCC )      //看门狗开始工作
+#define IWDG_FEED                   ( 0xAAAA )      //喂狗,需定期发送此命令到IWDG_KEY中,否则系统会复位
 
+
+/*****************************************************************************
+ * WatchDog 基本功能接口
+ ****************************************************************************/
 
 /**
   * @brief  看门狗初始化
@@ -37,8 +45,24 @@
   */
 void HAL_WWDT_Init(uint32_t ulTimeOutMs)
 {
-
+    //配置工作模式
+    IWDG->KR = IWDG_ACCESS_REG_ENABLE;  //操作寄存器使能
+    IWDG->PR = 3;           //32分频,0.8S记一个数,最大超时时间为3276.8S
+    IWDG->RLR = 2500;       //设置超时时间为2S
+    IWDG->KR = IWDG_FEED;   //喂狗
     
+}
+
+
+/**
+  * @brief  看门狗启动
+  * @param  None
+  * @retval None
+  * @note   看门狗一旦开启,就无法停止
+  */
+void HAL_WWDT_Start(void)
+{
+    IWDG->KR = IWDG_START;  //独立看门狗开始工作
     
 }
 
@@ -50,7 +74,7 @@ void HAL_WWDT_Init(uint32_t ulTimeOutMs)
   */
 void WWDT_Feed(void)
 {
-
+    IWDG->KR = IWDG_FEED;   //喂狗
     
 }
 
