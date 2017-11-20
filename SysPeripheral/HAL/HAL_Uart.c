@@ -195,21 +195,21 @@ static void HAL_UART_IOConfig(uint8_t uUartNode)
     switch (uUartNode)
     {
     case HAL_UART_NODE0:
-        HAL_GPIO_ModeConfig(0, 9,  GPIO_AF_PP_H);   // TX: PA9
-        HAL_GPIO_ModeConfig(0, 10, GPIO_PUSH_UP);   // RX: PA10
+        HAL_GPIO_ModeConfig(0, 9,  HAL_GPIO_AF_PP_H);   // TX: PA9
+        HAL_GPIO_ModeConfig(0, 10, HAL_GPIO_PUSH_UP);   // RX: PA10
         
         break;                      
     case HAL_UART_NODE1:
-        HAL_GPIO_ModeConfig(0, 2, GPIO_AF_PP_H);    // TX: PA2
-        HAL_GPIO_ModeConfig(0, 3, GPIO_PUSH_UP);    // RX: PA3
+        HAL_GPIO_ModeConfig(0, 2, HAL_GPIO_AF_PP_H);    // TX: PA2
+        HAL_GPIO_ModeConfig(0, 3, HAL_GPIO_PUSH_UP);    // RX: PA3
         
     case HAL_UART_NODE2:
-        HAL_GPIO_ModeConfig(1, 10, GPIO_AF_PP_H);   // TX: PB10
-        HAL_GPIO_ModeConfig(1, 11, GPIO_PUSH_UP);   // RX: PB11
+        HAL_GPIO_ModeConfig(1, 10, HAL_GPIO_AF_PP_H);   // TX: PB10
+        HAL_GPIO_ModeConfig(1, 11, HAL_GPIO_PUSH_UP);   // RX: PB11
         
     case HAL_UART_NODE3:
-        HAL_GPIO_ModeConfig(2, 10, GPIO_AF_PP_H);   // TX: PC10
-        HAL_GPIO_ModeConfig(2, 11, GPIO_PUSH_UP);   // RX: PC11
+        HAL_GPIO_ModeConfig(2, 10, HAL_GPIO_AF_PP_H);   // TX: PC10
+        HAL_GPIO_ModeConfig(2, 11, HAL_GPIO_PUSH_UP);   // RX: PC11
         
         break;
     default : break;

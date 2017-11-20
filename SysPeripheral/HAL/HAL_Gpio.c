@@ -38,14 +38,14 @@ void HAL_GPIO_ModeConfig(uint16_t nPort, uint16_t nPin, HAL_GPIO_MODE Mode)
     {
         GPIOx[nPort]->CRL &= ~(0XFU<<nPin*4);
         
-        if (Mode == GPIO_PUSH_UP)
+        if (Mode == HAL_GPIO_PUSH_UP)
         {
-            GPIOx[nPort]->CRL |=  (GPIO_PUSH_UP<<nPin*4);
+            GPIOx[nPort]->CRL |=  (HAL_GPIO_PUSH_UP<<nPin*4);
             GPIOx[nPort]->ODR |=  (0x1U<<nPin);
         }
-        else if (Mode == GPIO_PUSH_DOWM)
+        else if (Mode == HAL_GPIO_PUSH_DOWM)
         {
-            GPIOx[nPort]->CRL |=  (GPIO_PUSH_UP<<nPin*4);
+            GPIOx[nPort]->CRL |=  (HAL_GPIO_PUSH_UP<<nPin*4);
             GPIOx[nPort]->ODR &= ~(0x1U<<nPin);
         }
         else 
@@ -57,14 +57,14 @@ void HAL_GPIO_ModeConfig(uint16_t nPort, uint16_t nPin, HAL_GPIO_MODE Mode)
     {
         GPIOx[nPort]->CRH &= ~(0XFU<<(nPin-8)*4);
         
-        if (Mode == GPIO_PUSH_UP)
+        if (Mode == HAL_GPIO_PUSH_UP)
         {
-            GPIOx[nPort]->CRH |=  (GPIO_PUSH_UP<<(nPin-8)*4);
+            GPIOx[nPort]->CRH |=  (HAL_GPIO_PUSH_UP<<(nPin-8)*4);
             GPIOx[nPort]->ODR |=  (0x1U<<nPin);
         }
-        else if (Mode == GPIO_PUSH_DOWM)
+        else if (Mode == HAL_GPIO_PUSH_DOWM)
         {
-            GPIOx[nPort]->CRH |=  (GPIO_PUSH_UP<<(nPin-8)*4);
+            GPIOx[nPort]->CRH |=  (HAL_GPIO_PUSH_UP<<(nPin-8)*4);
             GPIOx[nPort]->ODR &= ~(0x1U<<nPin);
         }
         else 
@@ -119,7 +119,7 @@ bool HAL_GPIO_GetIOState(uint16_t nPort, uint16_t nPin)
   */
 void HAL_GPIO_ConfigOD(uint16_t nPort, uint16_t nPin)
 {
-    HAL_GPIO_ModeConfig(nPort, nPin, GPIO_GP_OD_H);
+    HAL_GPIO_ModeConfig(nPort, nPin, HAL_GPIO_GP_OD_H);
     
 }
 
@@ -132,7 +132,7 @@ void HAL_GPIO_ConfigOD(uint16_t nPort, uint16_t nPin)
   */
 void HAL_GPIO_ConfigInput(uint16_t nPort, uint16_t nPin)
 {
-    HAL_GPIO_ModeConfig(nPort, nPin, GPIO_FLOAT);
+    HAL_GPIO_ModeConfig(nPort, nPin, HAL_GPIO_FLOAT);
     
 }
 
@@ -145,7 +145,7 @@ void HAL_GPIO_ConfigInput(uint16_t nPort, uint16_t nPin)
   */
 void HAL_GPIO_ConfigOutput(uint16_t nPort, uint16_t nPin)
 {
-    HAL_GPIO_ModeConfig(nPort, nPin, GPIO_GP_PP_H);
+    HAL_GPIO_ModeConfig(nPort, nPin, HAL_GPIO_GP_PP_H);
     
 }
 

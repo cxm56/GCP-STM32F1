@@ -3,6 +3,7 @@
 
 #include "chip.h"
 
+//UART节点定义
 typedef enum
 {
     HAL_UART_NODE0 = 0,

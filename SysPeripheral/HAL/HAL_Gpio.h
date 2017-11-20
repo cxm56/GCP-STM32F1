@@ -7,33 +7,33 @@
 /* ---定义IO模式--- */
 typedef enum
 {
-  // 输入
-  GPIO_FLOAT     = 0x4U,   //输入浮空    
-  
-  GPIO_PUSH_UP   = 0x8U,   //输入上拉    
-  GPIO_PUSH_DOWM = 0xCU,   //输入下拉    
-
-  // 通用输出
-  GPIO_GP_PP_L   = 0x2U,   //通用推挽低速
-  GPIO_GP_PP_M   = 0x1U,   //通用推挽中速
-  GPIO_GP_PP_H   = 0x3U,   //通用推挽高速
-
-  GPIO_GP_OD_L   = 0x6U,   //通用开漏低速
-  GPIO_GP_OD_M   = 0x5U,   //通用开漏中速
-  GPIO_GP_OD_H   = 0x7U,   //通用开漏高速
-
-  // 复用输出
-  GPIO_AF_PP_L   = 0xAU,   //复用推挽低速
-  GPIO_AF_PP_M   = 0x9U,   //复用推挽中速
-  GPIO_AF_PP_H   = 0xBU,   //复用推挽高速
-     
-  GPIO_AF_OD_L   = 0xEU,   //复用开漏低速
-  GPIO_AF_OD_M   = 0xDU,   //复用开漏中速
-  GPIO_AF_OD_H   = 0xFU,   //复用开漏高速
-             
-  // 模拟模式
-  GPIO_ANALOG    = 0x0U,   //模拟模式    
-  
+    // 输入
+    HAL_GPIO_FLOAT     = 0x4U,   //输入浮空    
+    
+    HAL_GPIO_PUSH_UP   = 0x8U,   //输入上拉    
+    HAL_GPIO_PUSH_DOWM = 0xCU,   //输入下拉    
+    
+    // 通用输出
+    HAL_GPIO_GP_PP_L   = 0x2U,   //通用推挽低速
+    HAL_GPIO_GP_PP_M   = 0x1U,   //通用推挽中速
+    HAL_GPIO_GP_PP_H   = 0x3U,   //通用推挽高速
+    
+    HAL_GPIO_GP_OD_L   = 0x6U,   //通用开漏低速
+    HAL_GPIO_GP_OD_M   = 0x5U,   //通用开漏中速
+    HAL_GPIO_GP_OD_H   = 0x7U,   //通用开漏高速
+    
+    // 复用输出
+    HAL_GPIO_AF_PP_L   = 0xAU,   //复用推挽低速
+    HAL_GPIO_AF_PP_M   = 0x9U,   //复用推挽中速
+    HAL_GPIO_AF_PP_H   = 0xBU,   //复用推挽高速
+    
+    HAL_GPIO_AF_OD_L   = 0xEU,   //复用开漏低速
+    HAL_GPIO_AF_OD_M   = 0xDU,   //复用开漏中速
+    HAL_GPIO_AF_OD_H   = 0xFU,   //复用开漏高速
+    
+    // 模拟模式
+    HAL_GPIO_ANALOG    = 0x0U,   //模拟模式    
+    
 }HAL_GPIO_MODE;
 
 
