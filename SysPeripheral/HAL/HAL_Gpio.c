@@ -28,7 +28,7 @@ static GPIO_TypeDef * const GPIOx[7] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF
   * @param  Mode IO输入/输出模式
   * @retval None
   */
-void HAL_GPIO_ModeConfig(uint16_t nPort, uint16_t nPin, GPIO_MODE Mode)
+void HAL_GPIO_ModeConfig(uint16_t nPort, uint16_t nPin, HAL_GPIO_MODE Mode)
 {
     /* 开时钟 */
     RCC->APB2ENR |= (0x1<<(2+nPort));

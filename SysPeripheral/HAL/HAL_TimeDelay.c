@@ -2,11 +2,17 @@
   ******************************************************************************
   * @file    HAL_TimeDelay.c
   * @author  Duhanfneg
-  * @version V1.0 
-  * @date    2017.08.17
-  * @brief   UART delay drivers
+  * @version V1.1 
+  * @date    2017.11.20
+  * @brief   TIM delay drivers
   ******************************************************************************
   * @attention
+  * 
+  * V1.1------------
+  * 修改描述: 规范接口,作为GCP(General control platform)的硬件抽象层使用
+  * 修改作者: 杜公子寒枫
+  * 当前版本: V1.1
+  * 修改日期: 2017.11.20
   * 
   * 
   ******************************************************************************
@@ -14,123 +20,9 @@
   
 /***********************************<INCLUDES>**********************************/
 #include "HAL_TimeDelay.h"
-#include "HAL_SysCtrl.h"
+#include "HAL_TimeComm.h"
 #include "chip.h"
 
-typedef enum
-{
-    HAL_TIM_0 = 0,  //TIM1 高级定时器
-    HAL_TIM_1,      //TIM8 高级定时器
-    HAL_TIM_2,      //TIM2 通用定时器
-    HAL_TIM_3,      //TIM3 通用定时器
-    HAL_TIM_4,      //TIM4 通用定时器
-    HAL_TIM_5,      //TIM5 通用定时器
-    HAL_TIM_6,      //TIM6 基本定时器
-    HAL_TIM_7,      //TIM7 基本定时器(F103的资源到此)
-    HAL_TIM_8,      //TIM9 通用定时器
-    HAL_TIM_9,      //TIM10 通用定时器
-    HAL_TIM_10,     //TIM11 通用定时器
-    HAL_TIM_11,     //TIM12 通用定时器
-    HAL_TIM_12,     //TIM13 通用定时器
-    HAL_TIM_13,     //TIM14 通用定时器
-    HAL_TIM_14,     //TIM15 通用定时器
-    HAL_TIM_15,     //TIM16 通用定时器
-    HAL_TIM_16,     //TIM17 通用定时器
-    HAL_TIM_NODE_NUM,
-    
-}HAL_TIME_NODE;
-
-
-//定时器节点定义
-TIM_TypeDef * const TIM[HAL_TIM_NODE_NUM] = {   TIM1,TIM8, TIM2, TIM3, TIM4, TIM5, TIM6, TIM7, \
-                                                TIM9, TIM10, TIM11, TIM12, TIM13, TIM14, TIM15, TIM16, TIM17};
-
-
-/* ---定时器分频系数计算宏--- */
-#define TIM_GET_PSC_BY_CNT_FRE(CntFre)            (TIMx_FCLK/(CntFre) - 1)   //通过计数频率计算预分频值
-#define TIM_GET_PSC_BY_OP_FRE(OutFre, AutoLoad)   (TIM_GET_PSC_BY_CNT_FRE((OutFre) * (AutoLoad))) //通过输出频率计算预分频值(计数频率=输出频率*自动重装载值)
-
-
-/**
-  * @brief  开启定时器时钟.
-  * @param  TIMx: where x can be 1 to 17 to select the TIM peripheral.
-  * @retval None
-  */
-static void HAL_TIM_ClockEnable(uint8_t uTimeNode)
-{
-    TIM_TypeDef * const TIMx = TIM[uTimeNode];
-    
-    if (TIMx == TIM1)
-    {
-        RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
-    }     
-    else if (TIMx == TIM2)
-    {
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-    }
-    else if (TIMx == TIM3)
-    {
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
-    }
-    else if (TIMx == TIM4)
-    {
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
-    } 
-    else if (TIMx == TIM5)
-    {
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
-    } 
-    else if (TIMx == TIM6)
-    {
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
-    } 
-    else if (TIMx == TIM7)
-    {
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
-    } 
-    else if (TIMx == TIM8)
-    {
-        RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM8, ENABLE);
-    }
-    else if (TIMx == TIM9)
-    {      
-        RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM9, ENABLE);
-    }  
-    else if (TIMx == TIM10)
-    {      
-        RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM10, ENABLE);
-    }  
-    else if (TIMx == TIM11) 
-    {     
-        RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM11, ENABLE);
-    }  
-    else if (TIMx == TIM12)
-    {      
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
-    }  
-    else if (TIMx == TIM13) 
-    {       
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM13, ENABLE);
-    }
-    else if (TIMx == TIM14) 
-    {       
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM14, ENABLE);
-    }        
-    else if (TIMx == TIM15)
-    {
-        RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM15, ENABLE);
-    } 
-    else if (TIMx == TIM16)
-    {
-        RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM16, ENABLE);
-    } 
-    else if (TIMx == TIM17)
-    {
-        RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM17, ENABLE);
-    }  
-    else;
-    
-}
 
 
 /*****************************************************************************

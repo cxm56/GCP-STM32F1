@@ -215,7 +215,6 @@ static void HAL_UART_IOConfig(uint8_t uUartNode)
     default : break;
     }
 
-    
 }
 
 
