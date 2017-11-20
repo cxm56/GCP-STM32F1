@@ -25,5 +25,7 @@
 *.wspos
 *.jlink
 *.bin
+*.tmp
+*.temp
 
 
